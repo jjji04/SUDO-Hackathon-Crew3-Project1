@@ -75,9 +75,16 @@ if prompt := st.chat_input("오늘의 일정을 알려주세요."):
                 model = genai.GenerativeModel("gemini-2.5-flash-lite", system_instruction=system_content)
                 chat = model.start_chat(history=history)
                 response = chat.send_message(prompt).text
-            
-            st.markdown(response)
+
+            # ✅ 타이핑 효과 추가
+            placeholder = st.empty()
+            displayed = ""
+            for char in response:
+                displayed += char
+                placeholder.markdown(displayed)
+                time.sleep(0.02)  # 속도 조절
+
             st.session_state.messages.append({"role": "assistant", "content": response})
-            
+
         except Exception as e:
             st.error(f"서버 연결 오류: {e}")
