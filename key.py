@@ -1,0 +1,1 @@
+GEMINI_API_KEY = "AIzaSyDJYaWe5CeGY15-O9bnQV-LU4z58hSF9HQ"  # 여기에 Gemini API 키를 입력하세요
