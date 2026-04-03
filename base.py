@@ -33,12 +33,10 @@ SYSTEM_PROMPT = {
 
 # ==========================================
 # [담당 4(김민주): 데이터 엔지니어] 세션 및 기록 관리
-# 미션: 사이드바에 st.sidebar.info("대화 기록이 안전하게 보관 중입니다.") 한 줄을 추가해주세요. 완료
+# 미션: 사이드바에 st.sidebar.info("대화 기록이 안전하게 보관 중입니다.") 한 줄을 추가해주세요.
 # ==========================================
 if "messages" not in st.session_state:
     st.session_state.messages = [SYSTEM_PROMPT]
-
-st.sidebar.info("대화 기록이 안전하게 보관 중입니다.")
 
 if st.sidebar.button("🧹 대화 기록 초기화"):
     st.session_state.messages = [SYSTEM_PROMPT]
