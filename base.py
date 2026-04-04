@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai
 import time
 import key  # key.py 파일에 OPENAI_API_KEY 변수가 있어야 합니다.
 
@@ -8,7 +8,7 @@ import key  # key.py 파일에 OPENAI_API_KEY 변수가 있어야 합니다.
 # 미션: 에러 메시지를 "⚠️ API 키가 없어요! key.py를 확인해주세요."로 수정해주세요.
 # ==========================================
 try:
-    client = OpenAI(api_key=key.OPENAI_API_KEY)
+    genai.configure(api_key=key.GEMINI_API_KEY)
 except Exception as e:
     st.error("QA 경고: API 키를 확인해주세요!")
 
@@ -64,14 +64,27 @@ if prompt := st.chat_input("오늘의 일정을 알려주세요."):
     with st.chat_message("assistant", avatar="🤖"):
         try:
             with st.spinner("생각 중..."):
-                completion = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
-                    messages=st.session_state.messages
+                system_content = next(
+                    (m["content"] for m in st.session_state.messages if m["role"] == "system"), None
                 )
-                response = completion.choices[0].message.content
-            
-            st.markdown(response)
+                history = [
+                    {"role": "user" if m["role"] == "user" else "model", "parts": [m["content"]]}
+                    for m in st.session_state.messages
+                    if m["role"] in ("user", "assistant") and m["content"] != prompt
+                ]
+                model = genai.GenerativeModel("gemini-2.5-flash-lite", system_instruction=system_content)
+                chat = model.start_chat(history=history)
+                response = chat.send_message(prompt).text
+
+            # ✅ 타이핑 효과 추가
+            placeholder = st.empty()
+            displayed = ""
+            for char in response:
+                displayed += char
+                placeholder.markdown(displayed)
+                time.sleep(0.02)  # 속도 조절
+
             st.session_state.messages.append({"role": "assistant", "content": response})
-            
+
         except Exception as e:
             st.error(f"서버 연결 오류: {e}")
