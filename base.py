@@ -1,16 +1,16 @@
 import streamlit as st
 import google.generativeai as genai
 import time
-import key  # key.py 파일에 OPENAI_API_KEY 변수가 있어야 합니다.
+import key  # key.py 파일에 GEMINI_API_KEY 변수가 있어야 합니다.
 
 # ==========================================
-# [담당 1(박진영): 총괄/QA] OpenAI 클라이언트 설정
-# 미션: 에러 메시지를 "⚠️ API 키가 없어요! key.py를 확인해주세요."로 수정해주세요.
+# [담당 1(박진영): 총괄/QA] GEMINI 클라이언트 설정
+# 미션: 에러 메시지를 "⚠️ API 키가 없어요! key.py를 확인해주세요."로 수정완료
 # ==========================================
 try:
     genai.configure(api_key=key.GEMINI_API_KEY)
 except Exception as e:
-    st.error("QA 경고: API 키를 확인해주세요!")
+    st.error("⚠️ API 키가 없어요! key.py를 확인해주세요.")
 
 # ==========================================
 # [담당 2(이민근): 프론트엔드1] 앱 디자인 및 레이아웃
@@ -44,21 +44,22 @@ if st.sidebar.button("🧹 대화 기록 초기화"):
 
 # ==========================================
 # [담당 5(박진영): 프론트엔드2] 메시지 렌더링
-# 미션: 사용자(else 부분)의 avatar 아이콘을 "👤"에서 "👨‍💻"로 수정해주세요.
+# 미션: 사용자(else 부분)의 avatar 아이콘을 "👤"에서 "👨‍💻"로 수정완료
 # ==========================================
 for message in st.session_state.messages:
     if message["role"] != "system":
-        avatar = "🤖" if message["role"] == "assistant" else "👤"
+        avatar = "🤖" if message["role"] == "assistant" else "👨‍💻"
         with st.chat_message(message["role"], avatar=avatar):
             st.markdown(message["content"])
 
 # ==========================================
 # [담당 6(황정원): 백엔드] API 호출 및 답변 생성 엔진
-# 미션: 타이핑 효과 로직을 추가해주세요.
+# 미션: 타이핑 효과 로직을 추가완료
+# [담당 5(박진영): 프론트엔드2]: 사용자의 avatar 아이콘을 "👤"에서 "👨‍💻"로 수정완료
 # ==========================================
 if prompt := st.chat_input("오늘의 일정을 알려주세요."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user", avatar="👤"):
+    with st.chat_message("user", avatar="👨‍💻"):
         st.markdown(prompt)
 
     with st.chat_message("assistant", avatar="🤖"):
