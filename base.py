@@ -38,6 +38,8 @@ SYSTEM_PROMPT = {
 if "messages" not in st.session_state:
     st.session_state.messages = [SYSTEM_PROMPT]
 
+st.sidebar.info("대화 기록이 안전하게 보관 중입니다.")
+
 if st.sidebar.button("🧹 대화 기록 초기화"):
     st.session_state.messages = [SYSTEM_PROMPT]
     st.rerun()
